@@ -23,21 +23,41 @@ const generationConfig = {
   responseMimeType: "text/plain",
 };
 
+const safetySettings = [
+  {
+    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+  },
+];
+
 async function run(prompt) {
   try {
     const chatSession = model.startChat({
       generationConfig,
+      safetySettings,
       history: [],
     });
 
     const result = await chatSession.sendMessage(prompt);
     const responseText = result.response.text();
 
-    console.log("Gemini Response:", responseText); // Log response to console
+    console.log("Gemini Response:", responseText);
     return responseText;
   } catch (error) {
     console.error("Error in Gemini API call:", error);
-    return "Error fetching response.";
+    return "Sorry, I encountered an error while processing your request. Please try again.";
   }
 }
 
